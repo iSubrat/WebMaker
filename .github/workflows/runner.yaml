@@ -23,7 +23,7 @@ jobs:
     - name: Install dependencies
       run: pip install -r requirements.txt
           
-    - name: Run script to upload JSON
+    - name: Run script to make live website
       run: python 01_live.py
       env:
         DB_HOST: ${{ secrets.DB_HOST }}
