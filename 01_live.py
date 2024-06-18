@@ -1,8 +1,9 @@
-import mysql.connector
-import ftplib
-from ftplib import FTP, error_perm
 import os
+import json
+import ftplib
+import mysql.connector
 from openai import OpenAI
+from ftplib import FTP, error_perm
 
 
 # MySQL database credentials
@@ -64,8 +65,21 @@ def execute_query(db_host, db_username, db_password, db_database, query):
 
 
 def create_placeholder_values(id, description):
-  return 'Website Title', description
-
+    content = json.dumps({
+        "home": {
+            "title": "home_title",
+            "description": "home"+description,
+        },
+        "about_us": {
+            "title": "about_title",
+            "description": "about"+description,
+        },
+        "contact_us": {
+            "title": "contact_title",
+            "description": "contact"+description,
+        },
+    }, indent=4)
+    return content
 
 def upload_to_ftp(ftp_host, ftp_username, ftp_password, filename, content, id):
     with FTP(ftp_host) as ftp:
