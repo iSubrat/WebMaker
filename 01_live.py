@@ -80,6 +80,7 @@ def execute_query(db_host, db_username, db_password, db_database, query):
             html_content = read_file(file_path)
             prompt = f"Description:\n{description}\n\n\nValues:\n{values}"
             generated_text = generate_text(prompt)
+            print(type(generated_text), generated_text)
             new_values = json.loads(generated_text)
             for k, v in new_values.items():
                 html_content = html_content.replace(k, v)
