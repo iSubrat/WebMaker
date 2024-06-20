@@ -89,6 +89,13 @@ def execute_query(db_host, db_username, db_password, db_database, query):
             cursor.execute(update_query, (id,))
             connection.commit()
             print("Status column updated to 'COMPLETED'")
+            url = "http://server.appcollection.in/delete_appmaker.php"
+            response = requests.get(url)
+            if response.status_code == 200:
+                print("Request was successful!")
+                print(response.content)
+            else:
+                print(f"Request failed with status code: {response.status_code}")
         else:
             raise RuntimeError("There is no website for build.")
 
@@ -146,12 +153,5 @@ if __name__ == "__main__":
   
       # Execute the query
       execute_query(host, username, password, database, query)
-      url = "http://server.appcollection.in/delete_appmaker.php"
-      response = requests.get(url)
-      if response.status_code == 200:
-          print("Request was successful!")
-          print(response.content)
-      else:
-          print(f"Request failed with status code: {response.status_code}")
     except Exception as e:
       raise RuntimeError("Process Aborted.")
