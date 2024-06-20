@@ -44,30 +44,20 @@ def generate_text(prompt, model="gpt-3.5-turbo"):
     except Exception as e:
         return f"An error occurred: {e}"
 
-def connect_to_database(db_host, db_username, db_password, db_database):
-    connection = None
-    try:
-        connection = mysql.connector.connect(
-            host=db_host,
-            user=db_username,
-            password=db_password,
-            database=db_database,
-            connection_timeout=600  # Increase timeout to handle long queries
-        )
-        if connection.is_connected():
-            print("Connected to MySQL database")
-    except mysql.connector.Error as e:
-        print("Error connecting to MySQL database:", e)
-    return connection
-
 def execute_query(db_host, db_username, db_password, db_database, query):
     retries = 3
-    connection = None
     for attempt in range(retries):
         try:
-            connection = connect_to_database(db_host, db_username, db_password, db_database)
-            if not connection:
-                raise RuntimeError("Failed to connect to the database.")
+            # Connect to the MySQL server
+            connection = mysql.connector.connect(
+                host=db_host,
+                user=db_username,
+                password=db_password,
+                database=db_database
+            )
+
+            if connection.is_connected():
+                print("Connected to MySQL database")
 
             # Create a cursor object
             cursor = connection.cursor()
@@ -86,6 +76,9 @@ def execute_query(db_host, db_username, db_password, db_database, query):
 
                 while cursor.nextset():
                     pass
+                update_query = "UPDATE app_descriptions SET status = 'BUILDING' WHERE id = %s"
+                cursor.execute(update_query, (id,))
+                connection.commit()
                 values = read_file('values-corporate.json')
                 file_path = "demo-corporate.html"
                 html_content = read_file(file_path)
@@ -110,14 +103,13 @@ def execute_query(db_host, db_username, db_password, db_database, query):
 
         except mysql.connector.Error as e:
             print(f"Attempt {attempt + 1} failed with error: {e}")
-            if connection and connection.is_connected():
-                connection.close()
             if attempt < retries - 1:
                 print("Retrying...")
             else:
                 print("All retry attempts failed.")
         finally:
-            if connection and connection.is_connected():
+            if connection.is_connected():
+                cursor.close()
                 connection.close()
 
 def upload_to_ftp(ftp_host, ftp_username, ftp_password, filename, content, id):
@@ -162,7 +154,7 @@ if __name__ == "__main__":
     try:
         # Example query
         client = OpenAI(api_key=openai_api_key)
-        query = "SELECT * FROM app_descriptions WHERE status = 'PENDING' ORDER BY id DESC LIMIT 1"
+        query = "SELECT * FROM app_descriptions ORDER BY id DESC LIMIT 1"
     
         # Execute the query
         execute_query(host, username, password, database, query)
@@ -174,4 +166,4 @@ if __name__ == "__main__":
         else:
             print(f"Request failed with status code: {response.status_code}")
     except Exception as e:
-        print(f"Process Aborted: {e}")
+        raise RuntimeError("Process Aborted.")
