@@ -86,9 +86,6 @@ def execute_query(db_host, db_username, db_password, db_database, query):
 
                 while cursor.nextset():
                     pass
-                update_query = "UPDATE app_descriptions SET status = 'BUILDING' WHERE id = %s"
-                cursor.execute(update_query, (id,))
-                connection.commit()
                 values = read_file('values-corporate.json')
                 file_path = "demo-corporate.html"
                 html_content = read_file(file_path)
