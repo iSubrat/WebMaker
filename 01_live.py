@@ -44,20 +44,30 @@ def generate_text(prompt, model="gpt-3.5-turbo"):
     except Exception as e:
         return f"An error occurred: {e}"
 
+def connect_to_database(db_host, db_username, db_password, db_database):
+    connection = None
+    try:
+        connection = mysql.connector.connect(
+            host=db_host,
+            user=db_username,
+            password=db_password,
+            database=db_database,
+            connection_timeout=600  # Increase timeout to handle long queries
+        )
+        if connection.is_connected():
+            print("Connected to MySQL database")
+    except mysql.connector.Error as e:
+        print("Error connecting to MySQL database:", e)
+    return connection
+
 def execute_query(db_host, db_username, db_password, db_database, query):
     retries = 3
+    connection = None
     for attempt in range(retries):
         try:
-            # Connect to the MySQL server
-            connection = mysql.connector.connect(
-                host=db_host,
-                user=db_username,
-                password=db_password,
-                database=db_database
-            )
-
-            if connection.is_connected():
-                print("Connected to MySQL database")
+            connection = connect_to_database(db_host, db_username, db_password, db_database)
+            if not connection:
+                raise RuntimeError("Failed to connect to the database.")
 
             # Create a cursor object
             cursor = connection.cursor()
@@ -103,13 +113,14 @@ def execute_query(db_host, db_username, db_password, db_database, query):
 
         except mysql.connector.Error as e:
             print(f"Attempt {attempt + 1} failed with error: {e}")
+            if connection and connection.is_connected():
+                connection.close()
             if attempt < retries - 1:
                 print("Retrying...")
             else:
                 print("All retry attempts failed.")
         finally:
-            if connection.is_connected():
-                cursor.close()
+            if connection and connection.is_connected():
                 connection.close()
 
 def upload_to_ftp(ftp_host, ftp_username, ftp_password, filename, content, id):
@@ -166,4 +177,4 @@ if __name__ == "__main__":
         else:
             print(f"Request failed with status code: {response.status_code}")
     except Exception as e:
-        raise RuntimeError("Process Aborted.")
+        print(f"Process Aborted: {e}")
