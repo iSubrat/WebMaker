@@ -20,6 +20,16 @@ ftp_password = os.environ['FTP_PASSWORD']
 # OPEN AI credentials
 openai_api_key = os.environ['OPENAI_API_KEY']
 
+def read_file(file_path):
+    try:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            content = file.read()
+            return content
+    except FileNotFoundError:
+        return "File not found. Please check the file path."
+    except Exception as e:
+        return f"An error occurred: {e}"
+
 def generate_text(prompt, model="gpt-3.5-turbo"):
     try:
         completion = client.chat.completions.create(
