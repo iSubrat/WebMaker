@@ -31,7 +31,7 @@ def read_file(file_path):
     except Exception as e:
         return f"An error occurred: {e}"
 
-def generate_text(prompt, model="gpt-3.5-turbo"):
+def generate_text(prompt, model="gpt-4o"):
     try:
         completion = client.chat.completions.create(
             model=model,
