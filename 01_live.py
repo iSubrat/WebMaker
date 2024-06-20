@@ -6,7 +6,6 @@ import mysql.connector
 from openai import OpenAI
 from ftplib import FTP, error_perm
 
-
 # MySQL database credentials
 host = os.environ['DB_HOST']
 username = os.environ['DB_USERNAME']
@@ -46,61 +45,72 @@ def generate_text(prompt, model="gpt-3.5-turbo"):
         return f"An error occurred: {e}"
 
 def execute_query(db_host, db_username, db_password, db_database, query):
-    try:
-        # Connect to the MySQL server
-        connection = mysql.connector.connect(
-            host=db_host,
-            user=db_username,
-            password=db_password,
-            database=db_database
-        )
+    retries = 3
+    for attempt in range(retries):
+        try:
+            # Connect to the MySQL server
+            connection = mysql.connector.connect(
+                host=db_host,
+                user=db_username,
+                password=db_password,
+                database=db_database
+            )
 
-        if connection.is_connected():
-            print("Connected to MySQL database")
+            if connection.is_connected():
+                print("Connected to MySQL database")
 
-        # Create a cursor object
-        cursor = connection.cursor()
+            # Create a cursor object
+            cursor = connection.cursor()
 
-        # Execute the query
-        cursor.execute(query)
+            # Execute the query
+            cursor.execute(query)
 
-        # Fetch all the rows
-        row = cursor.fetchone()
+            # Fetch the row
+            row = cursor.fetchone()
 
-        # Print the rows
-        if row:
-            id = row[0]
-            description = row[1]
-            print('Debug A: ', id, description)
+            # Print the rows
+            if row:
+                id = row[0]
+                description = row[1]
+                print('Debug A: ', id, description)
 
-            while cursor.nextset():
-                pass
-            update_query = "UPDATE app_descriptions SET status = 'BUILDING' WHERE id = %s"
-            cursor.execute(update_query, (id,))
-            connection.commit()
-            values = read_file('values-corporate.json')
-            file_path = "demo-corporate.html"
-            html_content = read_file(file_path)
-            prompt = f"Description:\n{description}\n\n\nValues:\n{values}"
-            generated_text = generate_text(prompt)
-            print(type(generated_text), generated_text)
-            new_values = json.loads(generated_text)
-            for k, v in new_values.items():
-                html_content = html_content.replace(k, v)
-            upload_to_ftp(ftp_host, ftp_username, ftp_password, file_path, html_content, id)
-            update_query = "UPDATE app_descriptions SET status = 'COMPLETED' WHERE id = %s"
-            cursor.execute(update_query, (id,))
-            connection.commit()
-            print("Status column updated to 'COMPLETED'")
-        else:
-            raise RuntimeError("There is no website for build.")
+                while cursor.nextset():
+                    pass
+                update_query = "UPDATE app_descriptions SET status = 'BUILDING' WHERE id = %s"
+                cursor.execute(update_query, (id,))
+                connection.commit()
+                values = read_file('values-corporate.json')
+                file_path = "demo-corporate.html"
+                html_content = read_file(file_path)
+                prompt = f"Description:\n{description}\n\n\nValues:\n{values}"
+                generated_text = generate_text(prompt)
+                print(type(generated_text), generated_text)
+                new_values = json.loads(generated_text)
+                for k, v in new_values.items():
+                    html_content = html_content.replace(k, v)
+                upload_to_ftp(ftp_host, ftp_username, ftp_password, file_path, html_content, id)
+                update_query = "UPDATE app_descriptions SET status = 'COMPLETED' WHERE id = %s"
+                cursor.execute(update_query, (id,))
+                connection.commit()
+                print("Status column updated to 'COMPLETED'")
+            else:
+                raise RuntimeError("There is no website for build.")
 
-        # Close the cursor and connection
-        cursor.close()
-        connection.close()
+            # Close the cursor and connection
+            cursor.close()
+            connection.close()
+            break  # Exit retry loop if successful
 
-    except mysql.connector.Error as e:
-        print("Error executing query:", e)
+        except mysql.connector.Error as e:
+            print(f"Attempt {attempt + 1} failed with error: {e}")
+            if attempt < retries - 1:
+                print("Retrying...")
+            else:
+                print("All retry attempts failed.")
+        finally:
+            if connection.is_connected():
+                cursor.close()
+                connection.close()
 
 def upload_to_ftp(ftp_host, ftp_username, ftp_password, filename, content, id):
     with FTP(ftp_host) as ftp:
@@ -140,22 +150,20 @@ def upload_to_ftp(ftp_host, ftp_username, ftp_password, filename, content, id):
 
         print(f"Uploaded {filename} to FTP.")
 
-
 if __name__ == "__main__":
     try:
-      
-      # Example query
-      client = OpenAI(api_key=openai_api_key)
-      query = "SELECT * FROM app_descriptions ORDER BY id DESC LIMIT 1"
-  
-      # Execute the query
-      execute_query(host, username, password, database, query)
-      url = "http://server.appcollection.in/delete_appmaker.php"
-      response = requests.get(url)
-      if response.status_code == 200:
-          print("Request was successful!")
-          print(response.content)
-      else:
-          print(f"Request failed with status code: {response.status_code}")
+        # Example query
+        client = OpenAI(api_key=openai_api_key)
+        query = "SELECT * FROM app_descriptions ORDER BY id DESC LIMIT 1"
+    
+        # Execute the query
+        execute_query(host, username, password, database, query)
+        url = "http://server.appcollection.in/delete_appmaker.php"
+        response = requests.get(url)
+        if response.status_code == 200:
+            print("Request was successful!")
+            print(response.content)
+        else:
+            print(f"Request failed with status code: {response.status_code}")
     except Exception as e:
-      raise RuntimeError("Process Aborted.")
+        raise RuntimeError("Process Aborted.")
