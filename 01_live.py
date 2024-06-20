@@ -142,7 +142,8 @@ def upload_to_ftp(ftp_host, ftp_username, ftp_password, filename, content, id):
 
 
 if __name__ == "__main__":
-    try:  
+    try:
+      
       # Example query
       client = OpenAI(api_key=openai_api_key)
       query = "SELECT * FROM app_descriptions ORDER BY id DESC LIMIT 1"
