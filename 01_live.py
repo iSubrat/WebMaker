@@ -20,6 +20,20 @@ ftp_password = os.environ['FTP_PASSWORD']
 # OPEN AI credentials
 openai_api_key = os.environ['OPENAI_API_KEY']
 
+def generate_text(prompt, model="gpt-3.5-turbo"):
+    try:
+        completion = client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system",
+                 "content": "user will give description & json values (key value pairs), where keys are variable names & values are text which is written on a corporate website. update the text for building a website related to description. you have to return only key value pairs as json without any additional text because your response is going to use in code."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+        return completion.choices[0].message.content.strip()
+    except Exception as e:
+        return f"An error occurred: {e}"
+
 def execute_query(db_host, db_username, db_password, db_database, query):
     try:
         # Connect to the MySQL server
@@ -50,9 +64,16 @@ def execute_query(db_host, db_username, db_password, db_database, query):
 
             while cursor.nextset():
                 pass
-            content = create_placeholder_values(id, description)
-            filename = "values.json"
-            upload_to_ftp(ftp_host, ftp_username, ftp_password, filename, content, id)
+            values = read_file('values.json')
+            client = OpenAI(api_key=api_key)
+            file_path = "demo-corporate.html"
+            html_content = read_file(file_path)
+            prompt = f"Description:\n{description}\n\n\nValues:\n{values}"
+            generated_text = generate_text(prompt)
+            new_values = json.loads(generated_text)
+            for k, v in new_values.items():
+                html_content = html_content.replace(k, v)
+            upload_to_ftp(ftp_host, ftp_username, ftp_password, file_path, html_content, id)
         else:
             raise RuntimeError("There is no website for build.")
 
