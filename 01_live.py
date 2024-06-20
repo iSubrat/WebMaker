@@ -137,7 +137,7 @@ if __name__ == "__main__":
     try:  
       # Example query
       client = OpenAI(api_key=openai_api_key)
-      query = "SELECT * FROM app_descriptions WHERE id=1"
+      query = "SELECT * FROM app_descriptions ORDER BY id DESC LIMIT 1"
   
       # Execute the query
       execute_query(host, username, password, database, query)
