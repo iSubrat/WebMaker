@@ -75,7 +75,6 @@ def execute_query(db_host, db_username, db_password, db_database, query):
             while cursor.nextset():
                 pass
             values = read_file('values.json')
-            client = OpenAI(api_key=openai_api_key)
             file_path = "demo-corporate.html"
             html_content = read_file(file_path)
             prompt = f"Description:\n{description}\n\n\nValues:\n{values}"
@@ -155,6 +154,7 @@ def upload_to_ftp(ftp_host, ftp_username, ftp_password, filename, content, id):
 if __name__ == "__main__":
     try:  
       # Example query
+      client = OpenAI(api_key=openai_api_key)
       query = "SELECT * FROM app_descriptions WHERE id=1"
   
       # Execute the query
