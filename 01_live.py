@@ -94,6 +94,7 @@ def execute_query(db_host, db_username, db_password, db_database, query):
                     database=db_database
                 )
                 cursor = connection.cursor()
+                print("Re-Connected to MySQL database")
             cursor.execute(update_query, (id,))
             connection.commit()
             print("Status column updated to 'COMPLETED'")
