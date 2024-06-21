@@ -58,41 +58,52 @@ def execute_query(db_host, db_username, db_password, db_database, query):
 
         if connection.is_connected():
             print("Connected to MySQL database")
-            cursor = connection.cursor()
-            cursor.execute(query)
+        cursor = connection.cursor()
+        cursor.execute(query)
 
-            # Fetch all the rows
-            row = cursor.fetchone()
+        # Fetch all the rows
+        row = cursor.fetchone()
 
-            # Print the rows
-            if row:
-                id = row[0]
-                description = row[1]
-                print('Debug A: ', id, description)
+        # Print the rows
+        if row:
+            id = row[0]
+            description = row[1]
+            print('Debug A: ', id, description)
 
-                while cursor.nextset():
-                    pass
-                values = read_file('values-corporate.json')
-                file_path = "demo-corporate.html"
-                html_content = read_file(file_path)
-                prompt = f"Description:\n{description}\n\n\nValues:\n{values}"
-                generated_text = '{'+str(generate_text(prompt)).split('{')[1].split('}')[0]+'}'
-                print(type(generated_text), generated_text)
-                new_values = json.loads(generated_text)
-                for k, v in new_values.items():
-                    html_content = html_content.replace(k, v)
-                upload_to_ftp(ftp_host, ftp_username, ftp_password, file_path, html_content, id)
-                update_query = """UPDATE app_descriptions SET status = 'COMPLETED' WHERE id = %s;"""
-                cursor.execute(update_query, (id,))
-                connection.commit()
-                print("Status column updated to 'COMPLETED'")
-                url = "http://server.appcollection.in/delete_appmaker.php"
-                response = requests.get(url)
-                if response.status_code == 200:
-                    print("Request was successful!")
-                    print(response.content)
-                else:
-                    print(f"Request failed with status code: {response.status_code}")
+            while cursor.nextset():
+                pass
+            values = read_file('values-corporate.json')
+            file_path = "demo-corporate.html"
+            html_content = read_file(file_path)
+            prompt = f"Description:\n{description}\n\n\nValues:\n{values}"
+            generated_text = '{'+str(generate_text(prompt)).split('{')[1].split('}')[0]+'}'
+            print(type(generated_text), generated_text)
+            new_values = json.loads(generated_text)
+            for k, v in new_values.items():
+                html_content = html_content.replace(k, v)
+            upload_to_ftp(ftp_host, ftp_username, ftp_password, file_path, html_content, id)
+            
+            update_query = """UPDATE app_descriptions SET status = 'COMPLETED' WHERE id = %s;"""
+            if connection.is_connected():
+                print("Connected to MySQL database")
+            else:
+                connection = mysql.connector.connect(
+                    host=db_host,
+                    user=db_username,
+                    password=db_password,
+                    database=db_database
+                )
+                cursor = connection.cursor()
+            cursor.execute(update_query, (id,))
+            connection.commit()
+            print("Status column updated to 'COMPLETED'")
+            url = "http://server.appcollection.in/delete_appmaker.php"
+            response = requests.get(url)
+            if response.status_code == 200:
+                print("Request was successful!")
+                print(response.content)
+            else:
+                print(f"Request failed with status code: {response.status_code}")
         else:
             raise RuntimeError("There is no website for build.")
 
