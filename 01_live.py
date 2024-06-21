@@ -46,14 +46,14 @@ def generate_text(prompt, model="gpt-4o-2024-05-13"):
     except Exception as e:
         return f"An error occurred: {e}"
 
-def make_json(prompt, i=0):
+def make_json(prompt, i=0, length):
     new_values = ''
     if i>2:
         return Error('Maximum Try Reached!')
     try:
         generated_text = '{'+str(generate_text(prompt)).split('{')[1].split('}')[0]+'}'
         new_values = json.loads(generated_text)
-        if len(new_values)==121:
+        if len(new_values)==length:
             print(f'It has new_values: {len(new_values)}')
             return new_values
         else:
@@ -97,7 +97,7 @@ def execute_query(db_host, db_username, db_password, db_database, query):
             # generated_text = '{'+str(generate_text(prompt)).split('{')[1].split('}')[0]+'}'
             # print(type(generated_text), generated_text)
             # new_values = json.loads(generated_text)
-            new_values = make_json(prompt)
+            new_values = make_json(prompt, length=len(json.loads(values)))
             for k, v in new_values.items():
                 html_content = html_content.replace(k, v)
             upload_to_ftp(ftp_host, ftp_username, ftp_password, file_path, html_content, id)
