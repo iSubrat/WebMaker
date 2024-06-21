@@ -98,8 +98,6 @@ def execute_query(db_host, db_username, db_password, db_database, query):
             # print(type(generated_text), generated_text)
             # new_values = json.loads(generated_text)
             make_json(prompt)
-            while (new_values)==
-            
             for k, v in new_values.items():
                 html_content = html_content.replace(k, v)
             upload_to_ftp(ftp_host, ftp_username, ftp_password, file_path, html_content, id)
