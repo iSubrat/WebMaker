@@ -46,7 +46,7 @@ def generate_text(prompt, model="gpt-4o-2024-05-13"):
     except Exception as e:
         return f"An error occurred: {e}"
 
-def make_json(prompt, i=0, length):
+def make_json(prompt, length, i=0):
     new_values = ''
     if i>2:
         return Error('Maximum Try Reached!')
