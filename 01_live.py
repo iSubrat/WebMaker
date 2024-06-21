@@ -52,13 +52,13 @@ def make_json(prompt, i=0):
         return Error('Maximum Try Reached!')
     try:
         generated_text = '{'+str(generate_text(prompt)).split('{')[1].split('}')[0]+'}'
-        print(type(generated_text), generated_text)
         new_values = json.loads(generated_text)
         if len(new_values)==121:
             print(f'It has new_values: {len(new_values)}')
             return new_values
         else:
             print(f'It has new_values: {len(new_values)}, Retrying!')
+            print(type(generated_text), generated_text)
             make_json(prompt, i+1)
     except Exception as e:
         print(e)
