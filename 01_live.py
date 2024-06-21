@@ -46,6 +46,24 @@ def generate_text(prompt, model="gpt-4o-2024-05-13"):
     except Exception as e:
         return f"An error occurred: {e}"
 
+def make_json(prompt, i=0):
+    new_values = ''
+    if i>2:
+        return Error('Maximum Try Reached!')
+    try:
+        generated_text = '{'+str(generate_text(prompt)).split('{')[1].split('}')[0]+'}'
+        print(type(generated_text), generated_text)
+        new_values = json.loads(generated_text)
+        if len(new_values)==121:
+            print(f'It has new_values: {len(new_values)}')
+            return new_values
+        else:
+            print(f'It has new_values: {len(new_values)}, Retrying!')
+            make_json(prompt, i+1)
+    except Exception as e:
+        print(e)
+        make_json(prompt, i+1)
+
 def execute_query(db_host, db_username, db_password, db_database, query):
     try:
         # Connect to the MySQL server
@@ -76,9 +94,12 @@ def execute_query(db_host, db_username, db_password, db_database, query):
             file_path = "demo-corporate.html"
             html_content = read_file(file_path)
             prompt = f"Description:\n{description}\n\n\nValues:\n{values}"
-            generated_text = '{'+str(generate_text(prompt)).split('{')[1].split('}')[0]+'}'
-            print(type(generated_text), generated_text)
-            new_values = json.loads(generated_text)
+            # generated_text = '{'+str(generate_text(prompt)).split('{')[1].split('}')[0]+'}'
+            # print(type(generated_text), generated_text)
+            # new_values = json.loads(generated_text)
+            make_json(prompt)
+            while (new_values)==
+            
             for k, v in new_values.items():
                 html_content = html_content.replace(k, v)
             upload_to_ftp(ftp_host, ftp_username, ftp_password, file_path, html_content, id)
