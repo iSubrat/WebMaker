@@ -57,7 +57,7 @@ def make_json(prompt, length, i=0):
             print(f'It has new_values: {len(new_values)}')
             return new_values
         else:
-            print(f'It has new_values: {len(new_values)}, Retrying!')
+            print(f'It has new_values: {len(new_values)} while length must be {length}, Retrying!')
             print(type(generated_text), generated_text)
             make_json(prompt, i+1)
     except Exception as e:
