@@ -97,7 +97,7 @@ def execute_query(db_host, db_username, db_password, db_database, query):
             # generated_text = '{'+str(generate_text(prompt)).split('{')[1].split('}')[0]+'}'
             # print(type(generated_text), generated_text)
             # new_values = json.loads(generated_text)
-            make_json(prompt)
+            new_values = make_json(prompt)
             for k, v in new_values.items():
                 html_content = html_content.replace(k, v)
             upload_to_ftp(ftp_host, ftp_username, ftp_password, file_path, html_content, id)
