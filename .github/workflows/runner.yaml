@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - counter.txt
+      - 01_counter.txt
 
 jobs:
   update_files:
@@ -21,7 +21,7 @@ jobs:
         python-version: '3.x'
 
     - name: Install dependencies
-      run: pip install -r requirements.txt
+      run: pip install -r 01_requirements.txt
           
     - name: Run script to make live website
       run: python 01_live.py
