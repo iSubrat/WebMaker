@@ -52,9 +52,10 @@ def make_json(prompt, theme, i=0):
     try:
         generated_text = generate_text(prompt)
         new_values = json.loads(generated_text)
+        print(f'Generated Text: {generated_text}\New Values:{new_values}')
         return new_values
     except Exception as e:
-        print(e)
+        print(f'Error in make_json function: {e}')
         make_json(prompt, theme, i + 1)
 
 def execute_query(db_host, db_username, db_password, db_database, query):
@@ -95,10 +96,14 @@ def execute_query(db_host, db_username, db_password, db_database, query):
                     combined_prompt += f"Values for {file_key}:\n{values}\n\n"
                 
                 # Generate new values for all files at once
-                new_values = make_json(combined_prompt, theme=theme)
+                print(f'Combined Prompt: {combined_prompt}\nTheme:{theme}')
+                # new_values = make_json(combined_prompt, theme=theme)
+                print(f'File Structure: {file_structure}\nTheme: {theme}\n')
+                print(f'file_structure[theme]: {file_structure[theme]}')
                 
                 # Process and update each file
                 for file_key in file_structure[theme]:
+                    print(f'file_key: {file_key}')
                     html_file = f'{file_key}.html'
                     values_file = f'{file_key}.json'
                     html_content = read_file(html_file)
