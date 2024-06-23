@@ -31,13 +31,13 @@ def read_file(file_path):
     except Exception as e:
         return f"An error occurred: {e}"
 
-def generate_text(prompt, model="gpt-4o-2024-05-13"):
+def generate_text(prompt, theme, model="gpt-4o-2024-05-13"):
     try:
         completion = client.chat.completions.create(
             model=model,
             messages=[
                 {"role": "system",
-                 "content": "You will be given a description and a set of JSON key-value pairs for multiple files. Update the text for building a website related to the description. Return the updated values as JSON in the following format: {'filename1': {'key1': 'updated_value1', ...}, 'filename2': {'key1': 'updated_value1', ...}, ...}. Do not include any additional text."},
+                 "content": f"user will give description & json values (key value pairs), where keys are variable names & values are text which is written on a {theme} website. update the text for building a website related to description. you have to return only key value pairs as json without any additional text because your response is going to use in code."},
                 {"role": "user", "content": prompt}
             ]
         )
@@ -45,18 +45,23 @@ def generate_text(prompt, model="gpt-4o-2024-05-13"):
     except Exception as e:
         return f"An error occurred: {e}"
 
-def make_json(prompt, theme, i=0):
+def make_json(prompt, length, theme, i=0):
     new_values = ''
     if i > 2:
         return Error('Maximum Try Reached!')
     try:
-        generated_text = generate_text(prompt)
+        generated_text = '{' + str(generate_text(prompt, theme)).split('{')[1].split('}')[0] + '}'
         new_values = json.loads(generated_text)
-        print(f'Generated Text: {generated_text}\nNew Values:{new_values}')
-        return new_values
+        if len(new_values) == length:
+            print(f'It has new_values: {len(new_values)}')
+            return new_values
+        else:
+            print(f'It has new_values: {len(new_values)} while length must be {length}, Retrying!')
+            print(type(generated_text), generated_text)
+            make_json(prompt, length, theme, i + 1)
     except Exception as e:
-        print(f'Error in make_json function: {e}')
-        make_json(prompt, theme, i + 1)
+        print(e)
+        make_json(prompt, length, theme, i + 1)
 
 def execute_query(db_host, db_username, db_password, db_database, query):
     try:
@@ -81,37 +86,29 @@ def execute_query(db_host, db_username, db_password, db_database, query):
             id = row[0]
             description = row[1]
             theme = row[2]
-            print('Selected Row: ', id, description, theme)
+            user_type = row[4]  # Assuming the user_type is in the 5th column
+            print('Selected Row: ', id, description, theme, user_type)
 
             # Load the file structure
             with open('01_file_structure.json', 'r') as f:
                 file_structure = json.load(f)
 
             if theme in file_structure:
-                # Prepare the combined prompt
-                combined_prompt = f"Description:\n{description}\n\n\n"
-                for file_key in file_structure[theme]:
+                files_to_process = file_structure[theme]
+
+                if user_type == 'free':
+                    files_to_process = files_to_process[:1]  # Only process the first page for free users
+
+                for file_key in files_to_process:
                     values_file = f'{file_key}.json'
-                    values = read_file(values_file)
-                    combined_prompt += f"Values for {file_key}:\n{values}\n\n"
-                
-                # Generate new values for all files at once
-                print(f'Combined Prompt: {combined_prompt}\nTheme:{theme}')
-                # new_values = make_json(combined_prompt, theme=theme)
-                print(f'File Structure: {file_structure}\nTheme: {theme}\n')
-                print(f'file_structure[theme]: {file_structure[theme]}')
-                
-                # Process and update each file
-                for file_key in file_structure[theme]:
-                    print(f'file_key: {file_key}')
                     html_file = f'{file_key}.html'
-                    values_file = f'{file_key}.json'
+                    values = read_file(values_file)
                     html_content = read_file(html_file)
-                    
-                    if file_key in new_values:
-                        for k, v in new_values[file_key].items():
-                            html_content = html_content.replace(k, v)
-                        upload_to_ftp(ftp_host, ftp_username, ftp_password, html_file, html_content, id)
+                    prompt = f"Description:\n{description}\n\n\nValues:\n{values}"
+                    new_values = make_json(prompt, length=len(json.loads(values)), theme=theme)
+                    for k, v in new_values.items():
+                        html_content = html_content.replace(k, v)
+                    upload_to_ftp(ftp_host, ftp_username, ftp_password, html_file, html_content, id)
 
                 # Update the status in the database
                 update_query = """UPDATE app_descriptions SET status = 'COMPLETED' WHERE id = %s;"""
