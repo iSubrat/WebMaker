@@ -45,6 +45,20 @@ def generate_text(prompt, theme, model="gpt-4o-2024-05-13"):
     except Exception as e:
         raise RuntimeError(f"Error generating text: {e}")
 
+def decide_theme(description, model="gpt-4o-2024-05-13"):
+    try:
+        completion = client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": f"The user will provide a description. you have to choose a website template for him by looking at description. Determine which template would be the best. Respond with only the template name from the following options: ['demo-consulting', 'demo-startup', 'demo-accounting', 'demo-restaurant', 'demo-charity', 'demo-architecture', 'demo-corporate', 'demo-ebook', 'demo-hosting', 'demo-application', 'demo-elearning', 'demo-medical', 'demo-business', 'demo-marketing', 'demo-photography', 'demo-magazine', 'demo-lawyer', 'demo-barber', 'demo-conference', 'demo-freelancer', 'demo-finance', 'demo-blogger']."},
+                {"role": "user", "content": description}
+            ]
+        )
+        return completion.choices[0].message.content.strip()
+    except Exception as e:
+        raise RuntimeError(f"Error generating text: {e}")
+
+
 def make_json(prompt, length, theme, retries=0):
     if retries > 2:
         raise RuntimeError('Maximum retries reached for generating JSON.')
@@ -148,6 +162,9 @@ def main():
 
             id, description, theme, _, user_type = row[:5]
             print(f"Processing id: {id}, theme: {theme}, user_type: {user_type}")
+            if theme == 'ai':
+                theme = decide_theme(description)
+                print(f"Processing id: {id}, theme: {theme}, user_type: {user_type}")
 
             file_structure = load_file_structure()
 
