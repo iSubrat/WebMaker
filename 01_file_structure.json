@@ -1,0 +1,202 @@
+{
+    "demo-consulting": [
+        "demo-consulting",
+        "demo-consulting-blog-single-modern",
+        "demo-consulting-clients",
+        "demo-consulting-company",
+        "demo-consulting-contact",
+        "demo-consulting-news",
+        "demo-consulting-process",
+        "demo-consulting-services",
+        "demo-consulting-services-details"
+    ],
+    "demo-startup": [
+        "demo-startup",
+        "demo-startup-blog",
+        "demo-startup-blog-single-simple",
+        "demo-startup-clients",
+        "demo-startup-contact",
+        "demo-startup-services",
+        "demo-startup-services-details",
+        "demo-startup-who-we-are"
+    ],
+    "demo-accounting": [
+        "demo-accounting",
+        "demo-accounting-blog-single-creative",
+        "demo-accounting-company",
+        "demo-accounting-contact",
+        "demo-accounting-news",
+        "demo-accounting-process",
+        "demo-accounting-services",
+        "demo-accounting-services-details"
+    ],
+    "demo-restaurant": [
+        "demo-restaurant",
+        "demo-restaurant-about",
+        "demo-restaurant-blog",
+        "demo-restaurant-blog-single-creative",
+        "demo-restaurant-chefs",
+        "demo-restaurant-contact",
+        "demo-restaurant-gallery",
+        "demo-restaurant-menu",
+        "demo-restaurant-story"
+    ],
+    "demo-charity": [
+        "demo-charity",
+        "demo-charity-about",
+        "demo-charity-blog-single-simple",
+        "demo-charity-causes",
+        "demo-charity-contact",
+        "demo-charity-gallery",
+        "demo-charity-stories",
+        "demo-charity-volunteer"
+    ],
+    "demo-architecture": [
+        "demo-architecture",
+        "demo-architecture-about",
+        "demo-architecture-blog",
+        "demo-architecture-blog-single-clean",
+        "demo-architecture-contact",
+        "demo-architecture-projects",
+        "demo-architecture-services",
+        "demo-architecture-single-project-gallery"
+    ],
+    "demo-corporate": [
+        "demo-corporate",
+        "demo-corporate-about",
+        "demo-corporate-blog",
+        "demo-corporate-blog-single-clean",
+        "demo-corporate-contact",
+        "demo-corporate-customer-stories",
+        "demo-corporate-pricing",
+        "demo-corporate-services",
+        "demo-corporate-services-details"
+    ],
+    "demo-ebook": [
+        "demo-ebook"
+    ],
+    "demo-hosting": [
+        "demo-hosting",
+        "demo-hosting-about",
+        "demo-hosting-contact",
+        "demo-hosting-domain",
+        "demo-hosting-hosting",
+        "demo-hosting-pricing",
+        "demo-hosting-support"
+    ],
+    "demo-application": [
+        "demo-application",
+        "demo-application-about",
+        "demo-application-download",
+        "demo-application-features",
+        "demo-application-how-it-works",
+        "demo-application-reviews",
+        "demo-application-subscribe"
+    ],
+    "demo-elearning": [
+        "demo-elearning",
+        "demo-elearning-about",
+        "demo-elearning-blog",
+        "demo-elearning-blog-single-simple",
+        "demo-elearning-contact",
+        "demo-elearning-courses",
+        "demo-elearning-courses-details",
+        "demo-elearning-instructors",
+        "demo-elearning-testimonial"
+    ],
+    "demo-medical": [
+        "demo-medical",
+        "demo-medical-about",
+        "demo-medical-appointment",
+        "demo-medical-contact",
+        "demo-medical-doctors",
+        "demo-medical-timetable",
+        "demo-medical-treatments"
+    ],
+    "demo-business": [
+        "demo-business",
+        "demo-business-about",
+        "demo-business-blog",
+        "demo-business-blog-single-modern",
+        "demo-business-clients",
+        "demo-business-contact",
+        "demo-business-pricing",
+        "demo-business-services",
+        "demo-business-services-details"
+    ],
+    "demo-marketing": [
+        "demo-marketing",
+        "demo-marketing-about",
+        "demo-marketing-case-studies",
+        "demo-marketing-contact",
+        "demo-marketing-pricing",
+        "demo-marketing-services",
+        "demo-marketing-services-details",
+        "demo-marketing-single-project-simple",
+        "demo-marketing-team"
+    ],
+    "demo-photography": [
+        "demo-photography",
+        "demo-photography-about",
+        "demo-photography-award",
+        "demo-photography-contact",
+        "demo-photography-work"
+    ],
+    "demo-magazine": [
+        "demo-magazine",
+        "demo-magazine-blog-single-creative",
+        "demo-magazine-contact",
+        "demo-magazine-fashion",
+        "demo-magazine-fitness",
+        "demo-magazine-food",
+        "demo-magazine-music",
+        "demo-magazine-travel"
+    ],
+    "demo-lawyer": [
+        "demo-lawyer",
+        "demo-lawyer-about",
+        "demo-lawyer-attorney-details",
+        "demo-lawyer-attorneys",
+        "demo-lawyer-blog-single-creative",
+        "demo-lawyer-contact",
+        "demo-lawyer-journal",
+        "demo-lawyer-practice-areas",
+        "demo-lawyer-practice-areas-details"
+    ],
+    "demo-barber": [
+        "demo-barber"
+    ],
+    "demo-conference": [
+        "demo-conference",
+        "demo-conference-about-event",
+        "demo-conference-gallery",
+        "demo-conference-pricing",
+        "demo-conference-registration",
+        "demo-conference-schedule",
+        "demo-conference-speaker-details",
+        "demo-conference-speakers"
+    ],
+    "demo-freelancer": [
+        "demo-freelancer"
+    ],
+    "demo-finance": [
+        "demo-finance",
+        "demo-finance-about",
+        "demo-finance-blog-single-simple",
+        "demo-finance-contact",
+        "demo-finance-expertise",
+        "demo-finance-expertise-details",
+        "demo-finance-news",
+        "demo-finance-pricing",
+        "demo-finance-team"
+    ],
+    "demo-blogger": [
+        "demo-blogger",
+        "demo-blogger-about",
+        "demo-blogger-blog-single-classic",
+        "demo-blogger-contact",
+        "demo-blogger-fashion",
+        "demo-blogger-lifestyle",
+        "demo-blogger-style"
+    ]
+}

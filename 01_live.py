@@ -7,7 +7,6 @@ from mysql.connector import Error
 from openai import OpenAI
 from ftplib import FTP, error_perm
 
-
 # MySQL database credentials
 host = os.environ['DB_HOST']
 username = os.environ['DB_USERNAME']
@@ -48,21 +47,21 @@ def generate_text(prompt, model="gpt-4o-2024-05-13"):
 
 def make_json(prompt, length, i=0):
     new_values = ''
-    if i>2:
+    if i > 2:
         return Error('Maximum Try Reached!')
     try:
-        generated_text = '{'+str(generate_text(prompt)).split('{')[1].split('}')[0]+'}'
+        generated_text = '{' + str(generate_text(prompt)).split('{')[1].split('}')[0] + '}'
         new_values = json.loads(generated_text)
-        if len(new_values)==length:
+        if len(new_values) == length:
             print(f'It has new_values: {len(new_values)}')
             return new_values
         else:
             print(f'It has new_values: {len(new_values)} while length must be {length}, Retrying!')
             print(type(generated_text), generated_text)
-            make_json(prompt, i+1)
+            make_json(prompt, length, i + 1)
     except Exception as e:
         print(e)
-        make_json(prompt, i+1)
+        make_json(prompt, length, i + 1)
 
 def execute_query(db_host, db_username, db_password, db_database, query):
     try:
@@ -79,51 +78,59 @@ def execute_query(db_host, db_username, db_password, db_database, query):
         cursor = connection.cursor()
         cursor.execute(query)
 
-        # Fetch all the rows
+        # Fetch the row
         row = cursor.fetchone()
 
-        # Print the rows
+        # Process the row
         if row:
             id = row[0]
             description = row[1]
-            print('Debug A: ', id, description)
+            theme = row[2]
+            print('Selected Row: ', id, description, theme)
 
-            while cursor.nextset():
-                pass
-            values = read_file('demo-corporate.json')
-            file_path = "demo-corporate.html"
-            html_content = read_file(file_path)
-            prompt = f"Description:\n{description}\n\n\nValues:\n{values}"
-            # generated_text = '{'+str(generate_text(prompt)).split('{')[1].split('}')[0]+'}'
-            # print(type(generated_text), generated_text)
-            # new_values = json.loads(generated_text)
-            new_values = make_json(prompt, length=len(json.loads(values)))
-            for k, v in new_values.items():
-                html_content = html_content.replace(k, v)
-            upload_to_ftp(ftp_host, ftp_username, ftp_password, file_path, html_content, id)
-            
-            update_query = """UPDATE app_descriptions SET status = 'COMPLETED' WHERE id = %s;"""
-            if connection.is_connected():
-                print("Connected to MySQL database")
+            # Load the file structure
+            with open('file_structure.json', 'r') as f:
+                file_structure = json.load(f)
+
+            if theme in file_structure:
+                for file_key in file_structure[theme]:
+                    values_file = f'{file_key}.json'
+                    html_file = f'{file_key}.html'
+                    values = read_file(values_file)
+                    html_content = read_file(html_file)
+                    prompt = f"Description:\n{description}\n\n\nValues:\n{values}"
+                    new_values = make_json(prompt, length=len(json.loads(values)))
+                    for k, v in new_values.items():
+                        html_content = html_content.replace(k, v)
+                    upload_to_ftp(ftp_host, ftp_username, ftp_password, html_file, html_content, id)
+
+                # Update the status in the database
+                update_query = """UPDATE app_descriptions SET status = 'COMPLETED' WHERE id = %s;"""
+                if connection.is_connected():
+                    print("Connected to MySQL database")
+                else:
+                    connection = mysql.connector.connect(
+                        host=db_host,
+                        user=db_username,
+                        password=db_password,
+                        database=db_database
+                    )
+                    cursor = connection.cursor()
+                    print("Re-Connected to MySQL database")
+                cursor.execute(update_query, (id,))
+                connection.commit()
+                print("Status column updated to 'COMPLETED'")
+
+                # Make the request to the external URL
+                url = "http://server.appcollection.in/delete_appmaker.php"
+                response = requests.get(url)
+                if response.status_code == 200:
+                    print("Request was successful!")
+                    print(response.content)
+                else:
+                    print(f"Request failed with status code: {response.status_code}")
             else:
-                connection = mysql.connector.connect(
-                    host=db_host,
-                    user=db_username,
-                    password=db_password,
-                    database=db_database
-                )
-                cursor = connection.cursor()
-                print("Re-Connected to MySQL database")
-            cursor.execute(update_query, (id,))
-            connection.commit()
-            print("Status column updated to 'COMPLETED'")
-            url = "http://server.appcollection.in/delete_appmaker.php"
-            response = requests.get(url)
-            if response.status_code == 200:
-                print("Request was successful!")
-                print(response.content)
-            else:
-                print(f"Request failed with status code: {response.status_code}")
+                raise RuntimeError(f"No files associated with theme: {theme}")
         else:
             raise RuntimeError("There is no website for build.")
 
@@ -172,14 +179,13 @@ def upload_to_ftp(ftp_host, ftp_username, ftp_password, filename, content, id):
 
         print(f"Uploaded {filename} to FTP.")
 
-
 if __name__ == "__main__":
     try:  
-      # Example query
-      client = OpenAI(api_key=openai_api_key)
-      query = """SELECT * FROM app_descriptions WHERE status = 'PENDING' ORDER BY id DESC LIMIT 1;"""
-  
-      # Execute the query
-      execute_query(host, username, password, database, query)
+        # Example query
+        client = OpenAI(api_key=openai_api_key)
+        query = """SELECT * FROM app_descriptions WHERE status = 'PENDING' ORDER BY id DESC LIMIT 1;"""
+    
+        # Execute the query
+        execute_query(host, username, password, database, query)
     except Exception as e:
-      raise RuntimeError("Process Aborted.")
+        raise RuntimeError("Process Aborted.")
