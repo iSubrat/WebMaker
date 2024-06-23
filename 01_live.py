@@ -56,8 +56,10 @@ def make_json(prompt, length, theme, retries=0):
         if len(new_values) == length:
             return new_values
         else:
+            print(f"Generated JSON length mismatch. Expected {length}, got {len(new_values)}. Retrying...")
             return make_json(prompt, length, theme, retries + 1)
     except Exception as e:
+        print(f"Error in make_json: {e}. Retrying...")
         return make_json(prompt, length, theme, retries + 1)
 
 def connect_to_database():
@@ -69,6 +71,7 @@ def connect_to_database():
             database=CONFIG['db_name']
         )
         if connection.is_connected():
+            print("Connected to MySQL database")
             return connection
     except Error as e:
         raise RuntimeError(f"Error connecting to MySQL database: {e}")
@@ -84,6 +87,7 @@ def update_status_to_completed(connection, id):
     cursor = connection.cursor()
     cursor.execute(query, (id,))
     connection.commit()
+    print(f"Status updated to COMPLETED for id: {id}")
 
 def load_file_structure():
     try:
@@ -109,6 +113,7 @@ def upload_to_ftp(ftp_host, ftp_username, ftp_password, filename, content, id):
                 try:
                     ftp.cwd(current_path)
                 except error_perm:
+                    print(f"Creating directory: {current_path}")
                     ftp.mkd(current_path)
                     ftp.cwd(current_path)
         
@@ -117,6 +122,7 @@ def upload_to_ftp(ftp_host, ftp_username, ftp_password, filename, content, id):
         
         with open(filename, 'rb') as file:
             ftp.storbinary(f'STOR {filename}', file)
+        print(f"Uploaded {filename} to FTP in directory: {directory}")
 
 def process_file(file_key, description, theme, id):
     values_file = f'{file_key}.json'
@@ -141,6 +147,8 @@ def main():
                 raise ValueError("Expected at least 5 columns in the database row.")
 
             id, description, theme, _, user_type = row[:5]
+            print(f"Processing id: {id}, theme: {theme}, user_type: {user_type}")
+
             file_structure = load_file_structure()
 
             if theme in file_structure:
@@ -149,15 +157,16 @@ def main():
                     files_to_process = files_to_process[:1]
 
                 for file_key in files_to_process:
+                    print(f"Processing file: {file_key}")
                     process_file(file_key, description, theme, id)
 
                 update_status_to_completed(connection, id)
 
                 response = requests.get("http://server.appcollection.in/delete_appmaker.php")
                 if response.status_code == 200:
-                    print("Request was successful!")
+                    print("Request to external URL was successful!")
                 else:
-                    print(f"Request failed with status code: {response.status_code}")
+                    print(f"Request to external URL failed with status code: {response.status_code}")
             else:
                 raise RuntimeError(f"No files associated with theme: {theme}")
 
@@ -170,6 +179,7 @@ def main():
     finally:
         if 'connection' in locals() and connection.is_connected():
             connection.close()
+            print("Database connection closed.")
 
 if __name__ == "__main__":
     main()
