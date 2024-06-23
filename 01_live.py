@@ -96,7 +96,7 @@ def execute_query(db_host, db_username, db_password, db_database, query):
             if theme in file_structure:
                 files_to_process = file_structure[theme]
 
-                if user_type == 'free':
+                if user_type == 'FREE':
                     files_to_process = files_to_process[:1]  # Only process the first page for free users
 
                 for file_key in files_to_process:
