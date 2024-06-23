@@ -37,7 +37,7 @@ def generate_text(prompt, theme, model="gpt-4o-2024-05-13"):
         completion = client.chat.completions.create(
             model=model,
             messages=[
-                {"role": "system", "content": f"The user will provide a description and JSON values (key-value pairs), where keys are variable names and values are text written on a {theme} website. Update the text to make website related to the provided description while preserving the original names for common buttons such as 'home', 'about us', 'contact us', etc. Ensure that the response maintains the same number of key-value pairs, only replacing the values without adding or deleting any keys. The response should contain only the updated key-value pairs in JSON format, without any additional text, as it will be used directly in the code."},
+                {"role": "system", "content": f"The user will provide a description and JSON values (key-value pairs), where keys are variable names and values are text written on a website. existing values are available for just giving you idea which kind of & what length of text needs to write. Update the text to make website related to the provided description while preserving the original names for common buttons such as 'home', 'about us', 'contact us', etc. Ensure that the response maintains the same number of key-value pairs, only replacing the values without adding or deleting any keys. The response should contain only the updated key-value pairs in JSON format, without any additional text, as it will be used directly in the code."},
                 {"role": "user", "content": prompt}
             ]
         )
@@ -149,6 +149,23 @@ def process_file(file_key, description, theme, id):
     for k, v in new_values.items():
         html_content = html_content.replace(k, v)
 
+    upload_to_ftp(CONFIG['ftp_host'], CONFIG['ftp_username'], CONFIG['ftp_password'], html_file, html_content, id)
+    html_content = f"""
+<iframe id="myIframe" src="./{html_file}" width="100%" height="100%" style="border:0;"></iframe>
+<script>
+document.getElementById('myIframe').onload = function() {{
+    var iframe = document.getElementById('myIframe').contentWindow.document;
+    var links = iframe.getElementsByTagName('a');
+    for (var i = 0; i < links.length; i++) {{
+        links[i].addEventListener('click', function(event) {{
+            event.preventDefault();
+        }});
+    }}
+}};
+</script>
+"""
+    
+    html_file = 'index.html'
     upload_to_ftp(CONFIG['ftp_host'], CONFIG['ftp_username'], CONFIG['ftp_password'], html_file, html_content, id)
 
 def main():
