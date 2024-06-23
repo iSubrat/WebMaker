@@ -160,6 +160,7 @@ def main():
                     print(f"Processing file: {file_key}")
                     process_file(file_key, description, theme, id)
 
+                connection = connect_to_database()
                 update_status_to_completed(connection, id)
 
                 response = requests.get("http://server.appcollection.in/delete_appmaker.php")
