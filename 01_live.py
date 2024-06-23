@@ -89,7 +89,7 @@ def execute_query(db_host, db_username, db_password, db_database, query):
             print('Selected Row: ', id, description, theme)
 
             # Load the file structure
-            with open('file_structure.json', 'r') as f:
+            with open('01_file_structure.json', 'r') as f:
                 file_structure = json.load(f)
 
             if theme in file_structure:
