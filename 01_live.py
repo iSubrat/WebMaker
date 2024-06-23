@@ -163,7 +163,13 @@ def main():
             id, description, theme, _, user_type = row[:5]
             print(f"Processing id: {id}, theme: {theme}, user_type: {user_type}")
             if theme == 'ai':
-                theme = decide_theme(description)
+                i=0
+                while theme not in ['demo-consulting', 'demo-startup', 'demo-accounting', 'demo-restaurant', 'demo-charity', 'demo-architecture', 'demo-corporate', 'demo-ebook', 'demo-hosting', 'demo-application', 'demo-elearning', 'demo-medical', 'demo-business', 'demo-marketing', 'demo-photography', 'demo-magazine', 'demo-lawyer', 'demo-barber', 'demo-conference', 'demo-freelancer', 'demo-finance', 'demo-blogger']:
+                    if i>2:
+                        raise RuntimeError('AI Tried Maximum times to decide theme.')
+                    theme = decide_theme(f'Description: """{description}"""')
+                    i+=1
+                    print(f'AI decided: {theme}')
                 print(f"Processing id: {id}, theme: {theme}, user_type: {user_type}")
 
             file_structure = load_file_structure()
