@@ -52,7 +52,7 @@ def make_json(prompt, theme, i=0):
     try:
         generated_text = generate_text(prompt)
         new_values = json.loads(generated_text)
-        print(f'Generated Text: {generated_text}\New Values:{new_values}')
+        print(f'Generated Text: {generated_text}\nNew Values:{new_values}')
         return new_values
     except Exception as e:
         print(f'Error in make_json function: {e}')
