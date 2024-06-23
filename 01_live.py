@@ -37,7 +37,7 @@ def generate_text(prompt, model="gpt-4o-2024-05-13"):
             model=model,
             messages=[
                 {"role": "system",
-                 "content": "user will give description & json values (key value pairs), where keys are variable names & values are text which is written on a corporate website. update the text for building a website related to description. you have to return only key value pairs as json without any additional text because your response is going to use in code."},
+                 "content": "You will be given a description and a set of JSON key-value pairs for multiple files. Update the text for building a website related to the description. Return the updated values as JSON in the following format: {'filename1': {'key1': 'updated_value1', ...}, 'filename2': {'key1': 'updated_value1', ...}, ...}. Do not include any additional text."},
                 {"role": "user", "content": prompt}
             ]
         )
@@ -45,23 +45,17 @@ def generate_text(prompt, model="gpt-4o-2024-05-13"):
     except Exception as e:
         return f"An error occurred: {e}"
 
-def make_json(prompt, length, i=0):
+def make_json(prompt, theme, i=0):
     new_values = ''
     if i > 2:
         return Error('Maximum Try Reached!')
     try:
-        generated_text = '{' + str(generate_text(prompt)).split('{')[1].split('}')[0] + '}'
+        generated_text = generate_text(prompt)
         new_values = json.loads(generated_text)
-        if len(new_values) == length:
-            print(f'It has new_values: {len(new_values)}')
-            return new_values
-        else:
-            print(f'It has new_values: {len(new_values)} while length must be {length}, Retrying!')
-            print(type(generated_text), generated_text)
-            make_json(prompt, length, i + 1)
+        return new_values
     except Exception as e:
         print(e)
-        make_json(prompt, length, i + 1)
+        make_json(prompt, theme, i + 1)
 
 def execute_query(db_host, db_username, db_password, db_database, query):
     try:
@@ -93,16 +87,26 @@ def execute_query(db_host, db_username, db_password, db_database, query):
                 file_structure = json.load(f)
 
             if theme in file_structure:
+                # Prepare the combined prompt
+                combined_prompt = f"Description:\n{description}\n\n\n"
                 for file_key in file_structure[theme]:
                     values_file = f'{file_key}.json'
-                    html_file = f'{file_key}.html'
                     values = read_file(values_file)
+                    combined_prompt += f"Values for {file_key}:\n{values}\n\n"
+                
+                # Generate new values for all files at once
+                new_values = make_json(combined_prompt, theme=theme)
+                
+                # Process and update each file
+                for file_key in file_structure[theme]:
+                    html_file = f'{file_key}.html'
+                    values_file = f'{file_key}.json'
                     html_content = read_file(html_file)
-                    prompt = f"Description:\n{description}\n\n\nValues:\n{values}"
-                    new_values = make_json(prompt, length=len(json.loads(values)))
-                    for k, v in new_values.items():
-                        html_content = html_content.replace(k, v)
-                    upload_to_ftp(ftp_host, ftp_username, ftp_password, html_file, html_content, id)
+                    
+                    if file_key in new_values:
+                        for k, v in new_values[file_key].items():
+                            html_content = html_content.replace(k, v)
+                        upload_to_ftp(ftp_host, ftp_username, ftp_password, html_file, html_content, id)
 
                 # Update the status in the database
                 update_query = """UPDATE app_descriptions SET status = 'COMPLETED' WHERE id = %s;"""
