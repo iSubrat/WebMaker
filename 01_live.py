@@ -150,20 +150,7 @@ def process_file(file_key, description, theme, id):
         html_content = html_content.replace(k, v)
 
     upload_to_ftp(CONFIG['ftp_host'], CONFIG['ftp_username'], CONFIG['ftp_password'], html_file, html_content, id)
-    html_content = f"""
-<iframe id="myIframe" src="./{html_file}" width="100%" height="100%" style="border:0;"></iframe>
-<script>
-document.getElementById('myIframe').onload = function() {{
-    var iframe = document.getElementById('myIframe').contentWindow.document;
-    var links = iframe.getElementsByTagName('a');
-    for (var i = 0; i < links.length; i++) {{
-        links[i].addEventListener('click', function(event) {{
-            event.preventDefault();
-        }});
-    }}
-}};
-</script>
-"""
+    html_content = f'<meta http-equiv="refresh" content="0; url=./{html_file}" />'
     
     html_file = 'index.html'
     upload_to_ftp(CONFIG['ftp_host'], CONFIG['ftp_username'], CONFIG['ftp_password'], html_file, html_content, id)
