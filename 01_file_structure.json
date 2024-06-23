@@ -20,6 +20,14 @@
         "demo-startup-services-details",
         "demo-startup-who-we-are"
     ],
+    "demo-beauty-salon": [
+        "demo-beauty-salon",
+        "demo-beauty-salon-wedding",
+        "demo-beauty-salon-story",
+        "demo-beauty-salon-services",
+        "demo-beauty-salon-review",
+        "demo-beauty-salon-contact"
+    ],
     "demo-accounting": [
         "demo-accounting",
         "demo-accounting-blog-single-creative",
