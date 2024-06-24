@@ -249,5 +249,14 @@
         "demo-design-agency-expertise",
         "demo-design-agency-single-project-simple",
         "demo-design-agency-work"
+        ],
+        "demo-digital-agency": [
+        "demo-digital-agency",
+        "demo-digital-agency-about",
+        "demo-digital-agency-blog",
+        "demo-digital-agency-contact",
+        "demo-digital-agency-expertise",
+        "demo-digital-agency-portfolio",
+        "demo-digital-agency-single-project-minimal"
         ]
 }
