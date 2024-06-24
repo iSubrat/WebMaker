@@ -223,6 +223,23 @@
         "demo-data-analysis-contact",
         "demo-data-analysis-pricing",
         "demo-data-analysis-testimonials",
-        "demo-data-analysis-what-we-do"        
-    ]
+        "demo-data-analysis-what-we-do"
+    ],
+    "demo-decor-store": [
+        "demo-decor-store",
+        "demo-decor-store-about",
+        "demo-decor-store-account",
+        "demo-decor-store-blog-single-classic",
+        "demo-decor-store-blog",
+        "demo-decor-store-cart",
+        "demo-decor-store-checkout",
+        "demo-decor-store-collections",
+        "demo-decor-store-contact",
+        "demo-decor-store-faq",
+        "demo-decor-store-no-sidebar",
+        "demo-decor-store-right-sidebar",
+        "demo-decor-store-shop",
+        "demo-decor-store-single-product",
+        "demo-decor-store-wishlist"
+        ]
 }
