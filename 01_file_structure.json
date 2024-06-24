@@ -241,5 +241,13 @@
         "demo-decor-store-shop",
         "demo-decor-store-single-product",
         "demo-decor-store-wishlist"
+        ],
+        "demo-design-agency": [
+        "demo-design-agency",
+        "demo-design-agency-about",
+        "demo-design-agency-contact",
+        "demo-design-agency-expertise",
+        "demo-design-agency-single-project-simple",
+        "demo-design-agency-work"
         ]
 }
