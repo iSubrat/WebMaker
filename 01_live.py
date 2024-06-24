@@ -90,21 +90,21 @@ def connect_to_database():
     except Error as e:
         raise RuntimeError(f"Error connecting to MySQL database: {e}")
 
-def fetch_pending_app_description(connection):
-    query = "SELECT * FROM app_descriptions WHERE status = 'PENDING' ORDER BY id DESC LIMIT 1;"
+def fetch_pending_web_description(connection):
+    query = "SELECT * FROM web_descriptions WHERE status = 'PENDING' ORDER BY id DESC LIMIT 1;"
     cursor = connection.cursor()
     cursor.execute(query)
     return cursor.fetchone()
 
 def update_status_to_building(connection, id):
-    query = "UPDATE app_descriptions SET status = 'BUILDING' WHERE id = %s;"
+    query = "UPDATE web_descriptions SET status = 'BUILDING' WHERE id = %s;"
     cursor = connection.cursor()
     cursor.execute(query, (id,))
     connection.commit()
     print(f"Status updated to BUILDING for id: {id}")
 
 def update_status_to_completed(connection, id):
-    query = "UPDATE app_descriptions SET status = 'COMPLETED' WHERE id = %s;"
+    query = "UPDATE web_descriptions SET status = 'COMPLETED' WHERE id = %s;"
     cursor = connection.cursor()
     cursor.execute(query, (id,))
     connection.commit()
@@ -165,7 +165,7 @@ def process_file(file_key, description, theme, id):
 def main():
     try:
         connection = connect_to_database()
-        row = fetch_pending_app_description(connection)
+        row = fetch_pending_web_description(connection)
 
         if row:
             if len(row) < 5:
