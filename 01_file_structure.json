@@ -206,5 +206,23 @@
         "demo-blogger-fashion",
         "demo-blogger-lifestyle",
         "demo-blogger-style"
+    ],
+    "demo-branding-agency": [
+        "demo-branding-agency",
+        "demo-branding-agency-about",
+        "demo-branding-agency-contact",
+        "demo-branding-agency-portfolio",
+        "demo-branding-agency-services-detail",
+        "demo-branding-agency-services",
+        "demo-branding-agency-single-project-slider"
+    ],
+    "demo-data-analysis": [
+        "demo-data-analysis",
+        "demo-data-analysis-about",
+        "demo-data-analysis-cases",
+        "demo-data-analysis-contact",
+        "demo-data-analysis-pricing",
+        "demo-data-analysis-testimonials",
+        "demo-data-analysis-what-we-do"        
     ]
 }
