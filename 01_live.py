@@ -96,6 +96,13 @@ def fetch_pending_app_description(connection):
     cursor.execute(query)
     return cursor.fetchone()
 
+def update_status_to_building(connection, id):
+    query = "UPDATE app_descriptions SET status = 'BUILDING' WHERE id = %s;"
+    cursor = connection.cursor()
+    cursor.execute(query, (id,))
+    connection.commit()
+    print(f"Status updated to BUILDING for id: {id}")
+
 def update_status_to_completed(connection, id):
     query = "UPDATE app_descriptions SET status = 'COMPLETED' WHERE id = %s;"
     cursor = connection.cursor()
@@ -165,6 +172,7 @@ def main():
                 raise ValueError("Expected at least 5 columns in the database row.")
 
             id, description, theme, _, user_type = row[:5]
+            update_status_to_building(connection, id)
             print(f"Processing id: {id}, theme: {theme}, user_type: {user_type}")
             if theme == 'ai':
                 i=0
@@ -190,7 +198,7 @@ def main():
                 connection = connect_to_database()
                 update_status_to_completed(connection, id)
 
-                response = requests.get("http://server.appcollection.in/delete_appmaker.php")
+                response = requests.get("http://server.appcollection.in/delete_webmaker.php")
                 if response.status_code == 200:
                     print("Request to external URL was successful!")
                 else:
@@ -199,7 +207,7 @@ def main():
                 raise RuntimeError(f"No files associated with theme: {theme}")
 
         else:
-            raise RuntimeError("No pending app descriptions found.")
+            raise RuntimeError("No pending website found.")
 
     except Exception as e:
         print(f"Process aborted: {e}")
