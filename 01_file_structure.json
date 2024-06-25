@@ -284,5 +284,17 @@
         "demo-gym-and-fitness-package",
         "demo-gym-and-fitness-schedule",
         "demo-gym-and-fitness-trainer"
+    ],
+    "demo-real-estate": [
+        "demo-real-estate",
+        "demo-real-estate-about",
+        "demo-real-estate-agent-details",
+        "demo-real-estate-agents",
+        "demo-real-estate-blog-single-creative",
+        "demo-real-estate-blog",
+        "demo-real-estate-contact",
+        "demo-real-estate-property-details",
+        "demo-real-estate-rent",
+        "demo-real-estate-sell"
     ]
 }
