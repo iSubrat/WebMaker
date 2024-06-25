@@ -241,16 +241,16 @@
         "demo-decor-store-shop",
         "demo-decor-store-single-product",
         "demo-decor-store-wishlist"
-        ],
-        "demo-design-agency": [
+    ],
+    "demo-design-agency": [
         "demo-design-agency",
         "demo-design-agency-about",
         "demo-design-agency-contact",
         "demo-design-agency-expertise",
         "demo-design-agency-single-project-simple",
         "demo-design-agency-work"
-        ],
-        "demo-digital-agency": [
+    ],
+    "demo-digital-agency": [
         "demo-digital-agency",
         "demo-digital-agency-about",
         "demo-digital-agency-blog",
@@ -258,22 +258,31 @@
         "demo-digital-agency-expertise",
         "demo-digital-agency-portfolio",
         "demo-digital-agency-single-project-minimal"
-        ],
-        "demo-fashion-store": [
-            "demo-fashion-store",
-            "demo-fashion-store-about",
-            "demo-fashion-store-account",
-            "demo-fashion-store-blog-single-creative",
-            "demo-fashion-store-cart",
-            "demo-fashion-store-checkout",
-            "demo-fashion-store-collection",
-            "demo-fashion-store-contact",
-            "demo-fashion-store-faq",
-            "demo-fashion-store-magazine",
-            "demo-fashion-store-no-sidebar",
-            "demo-fashion-store-right-sidebar",
-            "demo-fashion-store-shop",
-            "demo-fashion-store-single-product",
-            "demo-fashion-store-wishlist"
-            ]
+    ],
+    "demo-fashion-store": [
+        "demo-fashion-store",
+        "demo-fashion-store-about",
+        "demo-fashion-store-account",
+        "demo-fashion-store-blog-single-creative",
+        "demo-fashion-store-cart",
+        "demo-fashion-store-checkout",
+        "demo-fashion-store-collection",
+        "demo-fashion-store-contact",
+        "demo-fashion-store-faq",
+        "demo-fashion-store-magazine",
+        "demo-fashion-store-no-sidebar",
+        "demo-fashion-store-right-sidebar",
+        "demo-fashion-store-shop",
+        "demo-fashion-store-single-product",
+        "demo-fashion-store-wishlist"
+    ],
+    "demo-gym-and-fitness": [
+        "demo-gym-and-fitness",
+        "demo-gym-and-fitness-about",
+        "demo-gym-and-fitness-classes",
+        "demo-gym-and-fitness-contact",
+        "demo-gym-and-fitness-package",
+        "demo-gym-and-fitness-schedule",
+        "demo-gym-and-fitness-trainer"
+    ]
 }
