@@ -258,5 +258,22 @@
         "demo-digital-agency-expertise",
         "demo-digital-agency-portfolio",
         "demo-digital-agency-single-project-minimal"
-        ]
+        ],
+        "demo-fashion-store": [
+            "demo-fashion-store",
+            "demo-fashion-store-about",
+            "demo-fashion-store-account",
+            "demo-fashion-store-blog-single-creative",
+            "demo-fashion-store-cart",
+            "demo-fashion-store-checkout",
+            "demo-fashion-store-collection",
+            "demo-fashion-store-contact",
+            "demo-fashion-store-faq",
+            "demo-fashion-store-magazine",
+            "demo-fashion-store-no-sidebar",
+            "demo-fashion-store-right-sidebar",
+            "demo-fashion-store-shop",
+            "demo-fashion-store-single-product",
+            "demo-fashion-store-wishlist"
+            ]
 }
