@@ -297,6 +297,15 @@
         "demo-real-estate-rent",
         "demo-real-estate-sell"
     ],
+    "demo-hotel-and-resort": [
+        "demo-hotel-and-resort",
+        "demo-hotel-and-resort-about-us",
+        "demo-hotel-and-resort-amenities",
+        "demo-hotel-and-resort-bistro",
+        "demo-hotel-and-resort-contact",
+        "demo-hotel-and-resort-room-details",
+        "demo-hotel-and-resort-rooms"
+    ],
     "demo-it-business": [
         "demo-it-business",
         "demo-it-business-about",
