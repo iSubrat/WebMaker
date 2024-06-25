@@ -296,5 +296,16 @@
         "demo-real-estate-property-details",
         "demo-real-estate-rent",
         "demo-real-estate-sell"
+    ],
+    "demo-it-business": [
+        "demo-it-business",
+        "demo-it-business-about",
+        "demo-it-business-blog-single-clean",
+        "demo-it-business-blog",
+        "demo-it-business-case-studies",
+        "demo-it-business-contact",
+        "demo-it-business-services-details",
+        "demo-it-business-services",
+        "demo-it-business-single-project-gallery"
     ]
 }
