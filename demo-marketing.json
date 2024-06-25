@@ -18,6 +18,9 @@
     "__TEXT17__": "Team",
     "__TEXT18__": "Contact",
     "__TEXT19__": "Business",
+    "__TEXT19_A__": "strategy",
+    "__TEXT19_B__": "approach",
+    "__TEXT19_C__": "planning",
     "__TEXT20__": "We do our best to implement your ideas into the project to make it successful & profitable.",
     "__TEXT21__": "Discover crafto",
     "__TEXT22__": "Get started",
@@ -25,6 +28,9 @@
     "__TEXT24__": "Targeted growth",
     "__TEXT25__": "About marketing agency",
     "__TEXT26__": "Marketing solutions for all",
+    "__TEXT26_A__": "business",
+    "__TEXT26_B__": "industry",
+    "__TEXT26_C__": "enterprise",
     "__TEXT27__": "Strategic marketing",
     "__TEXT28__": "Digital marketing that helps you to promote your brand the world.",
     "__TEXT29__": "Marketing campaigns",
@@ -140,5 +146,8 @@
     "__TEXT139__": "Subscribe to our newsletters and get the latest business updates.",
     "__TEXT140__": "Subscribe now!",
     "__TEXT141__": "Don't show this popup again",
-    "__TEXT142__": "Scroll"
+    "__TEXT142__": "Scroll",
+    "__TEXT143__": "Crafto",
+    "__TEXT144_A__": " Let's make something great work together",
+    "__TEXT144_B__": "Got a project in mind?"
 }
