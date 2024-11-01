@@ -156,9 +156,72 @@ def process_file(j, file_key, description, theme, id):
     for k, v in new_values.items():
         html_content = html_content.replace(k, v)
 
+    # Upload the processed HTML file
     upload_to_ftp(CONFIG['ftp_host'], CONFIG['ftp_username'], CONFIG['ftp_password'], html_file, html_content, id)
-    if j==0:
-        html_content = f'<meta http-equiv="refresh" content="0; url=./{html_file}" />'
+
+    # Only create and upload index.html once, for the first file processed (j == 0)
+    if j == 0:
+        html_content = f"""
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Customized Website</title>
+    <style>
+        body, html {{
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }}
+        #content-frame {{
+            width: 100%;
+            height: calc(100vh - 80px); /* Space at the bottom for the note and button */
+            border: none;
+        }}
+        #note-container {{
+            padding: 10px;
+            background-color: #f0f0f0;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #333;
+        }}
+        #contact-button {{
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }}
+        #contact-button:hover {{
+            background-color: #45a049;
+        }}
+    </style>
+</head>
+<body>
+
+    <!-- Main website content loaded in an iframe -->
+    <iframe id="content-frame" src="./{html_file}"></iframe>
+
+    <!-- Note and contact section -->
+    <div id="note-container">
+        <p>Need a few more customizations? Our developer team is here to help! Receive the source code and have your website live in just 24 hours.</p>
+        <a id="contact-button" href="https://wa.me/916397285262?text=Hi%20Developer,%20I%20need%20assistance%20with%20my%20website%20customizations."
+           target="_blank">Contact Developer</a>
+    </div>
+
+</body>
+</html>
+"""
+
+        # Set index.html as the filename and upload it
         html_file = 'index.html'
         upload_to_ftp(CONFIG['ftp_host'], CONFIG['ftp_username'], CONFIG['ftp_password'], html_file, html_content, id)
 
