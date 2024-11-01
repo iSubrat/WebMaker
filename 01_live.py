@@ -145,7 +145,7 @@ def upload_to_ftp(ftp_host, ftp_username, ftp_password, filename, content, id):
             ftp.storbinary(f'STOR {filename}', file)
         print(f"Uploaded {filename} to FTP in directory: {directory}")
 
-def process_file(file_key, description, theme, id):
+def process_file(j, file_key, description, theme, id):
     values_file = f'{file_key}.json'
     html_file = f'{file_key}.html'
     values = read_file(values_file)
@@ -157,10 +157,10 @@ def process_file(file_key, description, theme, id):
         html_content = html_content.replace(k, v)
 
     upload_to_ftp(CONFIG['ftp_host'], CONFIG['ftp_username'], CONFIG['ftp_password'], html_file, html_content, id)
-    html_content = f'<meta http-equiv="refresh" content="0; url=./{html_file}" />'
-    
-    html_file = 'index.html'
-    upload_to_ftp(CONFIG['ftp_host'], CONFIG['ftp_username'], CONFIG['ftp_password'], html_file, html_content, id)
+    if j==0:
+        html_content = f'<meta http-equiv="refresh" content="0; url=./{html_file}" />'
+        html_file = 'index.html'
+        upload_to_ftp(CONFIG['ftp_host'], CONFIG['ftp_username'], CONFIG['ftp_password'], html_file, html_content, id)
 
 def main():
     try:
@@ -191,9 +191,9 @@ def main():
                 if user_type == 'FREE':
                     files_to_process = files_to_process[:1]
 
-                for file_key in files_to_process:
+                for j, file_key in enumerate(files_to_process):
                     print(f"Processing file: {file_key}")
-                    process_file(file_key, description, theme, id)
+                    process_file(j, file_key, description, theme, id)
 
                 connection = connect_to_database()
                 update_status_to_completed(connection, id)
