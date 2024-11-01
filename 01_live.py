@@ -183,18 +183,18 @@ def process_file(j, file_key, description, theme, id):
         }}
         #note-container {{
             padding: 10px;
-            background-color: #f0f0f0;
+            background-color: #000000;
             text-align: center;
             font-family: Arial, sans-serif;
             font-size: 16px;
-            color: #333;
+            color: #ffffff;
         }}
         #contact-button {{
             margin-top: 10px;
             padding: 10px 20px;
             font-size: 16px;
             color: white;
-            background-color: #4CAF50;
+            background-color: #FF7A0F;
             border: none;
             border-radius: 5px;
             cursor: pointer;
