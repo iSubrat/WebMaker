@@ -227,7 +227,6 @@ def process_file(j, file_key, description, theme, id):
         <p>Need a few more customizations? Our developer team is here to help! Receive the source code and have your website live in just 24 hours.</p>
         <a id="contact-button" href="https://wa.me/916397285262?text=Hi%20Developer,%20I%20need%20assistance%20with%20my%20website%20customizations."
            target="_blank">Contact Developer</a>
-        <a id="report-button" href="https://wa.me/916397285262?text=Hi%20Developer,%20I%20would%20like%20to%20report%20a%20website%20for%20inappropriate%20or%20offensive%20content.%20Please%20assist%20with%20necessary%20actions." target="_blank">Report Website</a>
     </div>
 
 </body>
